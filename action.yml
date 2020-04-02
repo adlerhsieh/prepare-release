@@ -5,16 +5,19 @@ author: 'Adler Hsieh'
 branding:
   icon: 'git-branch' 
   color: 'green'
-# inputs:
-#   :  # id of input
-#     description: 'Who to greet'
-#     required: true
-#     default: 'World'
+inputs:
+  repo_owner:  # id of input
+    description: 'owner of the repository'
+    required: true
+  repo:  # id of input
+    description: 'name of the repository'
+    required: true
 # outputs:
 #   time: # id of output
 #     description: 'The time we greeted you'
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  # args:
-  #   - ${{ inputs.who-to-greet }}
+  args:
+    - REPO_OWNER=${{ inputs.repo_owner }}
+    - REPO=${{ inputs.repo }}

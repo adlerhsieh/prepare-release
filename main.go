@@ -1,7 +1,20 @@
 package main
 
-import "fmt"
+import (
+	"context"
+	"log"
+)
 
 func main() {
-	fmt.Println("hello world")
+	ctx := context.Background()
+	client := NewGitHubClient(ctx)
+	tagName, err := client.GetLatestReleaseTag(ctx)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+
+	err = client.CloseMilestone(ctx, tagName)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
 }
