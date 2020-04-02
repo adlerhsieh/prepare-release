@@ -1,9 +1,9 @@
 # action.yml
-name: 'Prepare Release'
-description: 'Prepare the repository for the next release'
+name: 'Close Milestone With Tagging'
+description: 'Close a GitHub milestone while tagging with the same name'
 author: 'Adler Hsieh'
 branding:
-  icon: 'git-branch' 
+  icon: 'tag' 
   color: 'green'
 inputs:
   repo_owner:  # id of input
