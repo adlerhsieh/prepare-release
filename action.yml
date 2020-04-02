@@ -5,19 +5,6 @@ author: 'Adler Hsieh'
 branding:
   icon: 'tag' 
   color: 'green'
-inputs:
-  repo_owner:  # id of input
-    description: 'owner of the repository'
-    required: true
-  repo:  # id of input
-    description: 'name of the repository'
-    required: true
-# outputs:
-#   time: # id of output
-#     description: 'The time we greeted you'
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - REPO_OWNER=${{ inputs.repo_owner }}
-    - REPO=${{ inputs.repo }}
