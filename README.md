@@ -1,6 +1,6 @@
 # Close Milestone With Release
 
-This action will close the milestone with the same name of the latest release title. For example, we a milestone with name "1.5.0" and the latest release with the title "1.5.0", and when this action is triggered, the milestone will be closed.
+This action will close the milestone with the same name of the latest release title. For example, we have a milestone with name "1.5.0" and the latest release with the title "1.5.0", and when this action is triggered, the milestone will be closed.
 
 It is recommended to trigger this action while publishing a release, as in:
 
