@@ -14,8 +14,6 @@ on: release
 uses: adlerhsieh/prepare-release@v0.1.2
 env: 
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  REPO_OWNER: 'adlerhsieh'
-  REPO: 'prepare-release'
   IGNORE_MILESTONE_NOT_FOUND: false
 ```
 
