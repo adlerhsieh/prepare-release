@@ -17,6 +17,7 @@ env:
   REPO_OWNER: 'adlerhsieh'
   REPO: 'prepare-release'
   IGNORE_MILESTONE_NOT_FOUND: false
+  RELEASE_NAME: ${{ github.event.release.tag_name }}
 ```
 
 ## Development
