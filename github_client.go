@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"strconv"
 
 	"github.com/google/go-github/v30/github"
 	"golang.org/x/oauth2"
@@ -18,23 +17,13 @@ type GitHubClient struct {
 	ignoreMilestoneNotFound bool
 }
 
-func NewGitHubClient(ctx context.Context) (*GitHubClient, error) {
-	var ignoreMilestoneNotFound bool
-	var err error
-	ignoreMilestoneNotFoundEnv := os.Getenv("IGNORE_MILESTONE_NOT_FOUND")
-
-	if ignoreMilestoneNotFoundEnv != "" {
-		ignoreMilestoneNotFound, err = strconv.ParseBool(ignoreMilestoneNotFoundEnv)
-		if err != nil {
-			return &GitHubClient{}, err
-		}
-	}
+func NewGitHubClient(ctx context.Context, repoOwner, repoName string, ignoreMilestoneNotFound bool) *GitHubClient {
 	return &GitHubClient{
-		repoOwner:               os.Getenv("REPO_OWNER"),
-		repoName:                os.Getenv("REPO"),
+		repoOwner:               repoOwner,
+		repoName:                repoName,
 		client:                  newGitHubClient(ctx),
 		ignoreMilestoneNotFound: ignoreMilestoneNotFound,
-	}, nil
+	}
 }
 
 func newGitHubClient(ctx context.Context) *github.Client {
