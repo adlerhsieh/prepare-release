@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -46,18 +45,6 @@ func newGitHubClient(ctx context.Context) *github.Client {
 	tc := oauth2.NewClient(ctx, ts)
 
 	return github.NewClient(tc)
-}
-
-func (g *GitHubClient) GetLatestReleaseTag(ctx context.Context) (string, error) {
-	latestRelease, _, err := g.client.Repositories.GetLatestRelease(ctx, g.repoOwner, g.repoName)
-	if err != nil {
-		return "", err
-	}
-	if latestRelease == nil {
-		return "", errors.New("no release found")
-	}
-
-	return *latestRelease.TagName, nil
 }
 
 func (g *GitHubClient) CloseMilestone(ctx context.Context, title string) error {

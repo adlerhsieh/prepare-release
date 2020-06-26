@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
+	"os"
 )
 
 func main() {
@@ -12,9 +14,9 @@ func main() {
 		log.Fatalln(err.Error())
 	}
 
-	tagName, err := client.GetLatestReleaseTag(ctx)
-	if err != nil {
-		log.Fatalln(err.Error())
+	tagName, exists := os.LookupEnv("RELEASE_NAME")
+	if !exists {
+		log.Fatalln(errors.New("the RELEASE_NAME env variable needs to be set"))
 	}
 
 	err = client.CloseMilestone(ctx, tagName)
