@@ -7,7 +7,11 @@ import (
 
 func main() {
 	ctx := context.Background()
-	client := NewGitHubClient(ctx)
+	client, err := NewGitHubClient(ctx)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+
 	tagName, err := client.GetLatestReleaseTag(ctx)
 	if err != nil {
 		log.Fatalln(err.Error())
