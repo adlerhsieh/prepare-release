@@ -11,11 +11,12 @@ on: release
 ## Usage
 
 ```yaml
-uses: adlerhsieh/prepare-release@v0.1.0
+uses: adlerhsieh/prepare-release@v0.1.1
 env: 
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  REPO_OWNER: ''
-  REPO: ''
+  REPO_OWNER: 'adlerhsieh'
+  REPO: 'prepare-release'
+  IGNORE_MILESTONE_NOT_FOUND: false
 ```
 
 ## Development

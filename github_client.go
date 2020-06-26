@@ -5,23 +5,36 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/google/go-github/v30/github"
 	"golang.org/x/oauth2"
 )
 
 type GitHubClient struct {
-	repoOwner string
-	repoName  string
-	client    *github.Client
+	repoOwner               string
+	repoName                string
+	client                  *github.Client
+	ignoreMilestoneNotFound bool
 }
 
-func NewGitHubClient(ctx context.Context) *GitHubClient {
-	return &GitHubClient{
-		repoOwner: os.Getenv("REPO_OWNER"),
-		repoName:  os.Getenv("REPO"),
-		client:    newGitHubClient(ctx),
+func NewGitHubClient(ctx context.Context) (*GitHubClient, error) {
+	var ignoreMilestoneNotFound bool
+	var err error
+	ignoreMilestoneNotFoundEnv := os.Getenv("IGNORE_MILESTONE_NOT_FOUND")
+
+	if ignoreMilestoneNotFoundEnv != "" {
+		ignoreMilestoneNotFound, err = strconv.ParseBool(ignoreMilestoneNotFoundEnv)
+		if err != nil {
+			return &GitHubClient{}, err
+		}
 	}
+	return &GitHubClient{
+		repoOwner:               os.Getenv("REPO_OWNER"),
+		repoName:                os.Getenv("REPO"),
+		client:                  newGitHubClient(ctx),
+		ignoreMilestoneNotFound: ignoreMilestoneNotFound,
+	}, nil
 }
 
 func newGitHubClient(ctx context.Context) *github.Client {
@@ -41,7 +54,7 @@ func (g *GitHubClient) GetLatestReleaseTag(ctx context.Context) (string, error) 
 		return "", err
 	}
 	if latestRelease == nil {
-		return "", errors.New("No releae found")
+		return "", errors.New("no release found")
 	}
 
 	return *latestRelease.TagName, nil
@@ -59,17 +72,22 @@ func (g *GitHubClient) CloseMilestone(ctx context.Context, title string) error {
 			targetMilestone = m
 		}
 	}
-	if targetMilestone == nil {
-		return fmt.Errorf("No milestone is matching the tag name. tagName=%s", title)
+
+	if targetMilestone != nil {
+		closedState := "closed"
+		targetMilestone.State = &closedState
+
+		_, _, err = g.client.Issues.EditMilestone(ctx, g.repoOwner, g.repoName, *targetMilestone.Number, targetMilestone)
+		if err != nil {
+			return err
+		}
+
+		return nil
 	}
 
-	closedState := "closed"
-	targetMilestone.State = &closedState
-
-	_, _, err = g.client.Issues.EditMilestone(ctx, g.repoOwner, g.repoName, *targetMilestone.Number, targetMilestone)
-	if err != nil {
-		return err
+	if g.ignoreMilestoneNotFound {
+		return nil
 	}
 
-	return nil
+	return fmt.Errorf("no milestone is matching the tag name. tagName=%s", title)
 }
